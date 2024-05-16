@@ -1,0 +1,19 @@
+﻿<Window x:Class="TodoList.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TodoList"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="13*"/>
+            <ColumnDefinition Width="67*"/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="Page1" Content="Page1" Height="35" MinWidth="100" Margin="5,97,5,302" Click="MainWindow_Click" Grid.ColumnSpan="2"></Button>
+        <Button x:Name="Page2" Content="Page2" Height="35" MinWidth="100" Margin="5,182,5,217" Grid.ColumnSpan="2"></Button>
+        <Button x:Name="Page3" Content="Page3" Height="35" MinWidth="100" Margin="5,269,5,130" Grid.ColumnSpan="2"></Button>
+        <Frame x:Name ="MyFrame" Background="AliceBlue" Grid.ColumnSpan="2"/>
+    </Grid>
+</Window>
