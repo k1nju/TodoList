@@ -55,7 +55,10 @@ namespace TodoList
                 return _addCommand ??
                   (_addCommand = new RelayCommand(obj =>
                   {
-                      TodoRepository.Create(new TodoModel(0,Name,Description,0,0,"",""));
+                      TodoRepository.Create(new TodoModel()
+                      {
+                          
+                      });
                       TodoList = new ObservableCollection<TodoModel>(TodoRepository.Read());
                   }));
             }

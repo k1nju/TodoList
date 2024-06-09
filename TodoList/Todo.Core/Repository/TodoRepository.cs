@@ -93,7 +93,7 @@ namespace Todo.Core.Repository
                                 int _isDone = rdr.GetInt32(index++);
                                 string _createdAt = rdr.GetString(index++);
                                 string _updatedAt = rdr.GetString(index++);
-                                todoModels.Add(new TodoModel(_id, _name, _description, _group_id, _isDone, _createdAt, _updatedAt));
+                                todoModels.Add(new TodoModel());
                             }
                         }
                     }
@@ -150,7 +150,7 @@ namespace Todo.Core.Repository
                                 int _isDone = rdr.GetInt32(index++);
                                 string _createdAt = rdr.GetString(index++);
                                 string _updatedAt = rdr.GetString(index++);
-                                current.Add(new TodoModel(_id, _name, _description, _group_id, _isDone, _createdAt, _updatedAt));
+                                current.Add(new TodoModel());
                             }
                         }
                     }
