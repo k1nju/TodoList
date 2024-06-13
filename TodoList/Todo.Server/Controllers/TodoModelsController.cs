@@ -76,12 +76,11 @@ namespace Todo.Server.Controllers
         // POST: api/TodoModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<TodoModel>> PostTodoModel(TodoModel todoModel)
+        public async Task<ActionResult<List<TodoModel>>> PostTodoModel(TodoModel todoModel)
         {
             _context.Todos.Add(todoModel);
             await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTodoModel", new { id = todoModel.Id }, todoModel);
+            return Ok(await _context.Todos.ToListAsync());
         }
 
         // DELETE: api/TodoModels/5

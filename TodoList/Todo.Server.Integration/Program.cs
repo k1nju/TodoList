@@ -11,49 +11,93 @@ using Todo.Core.Repository;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using Todo.Server.Utils;
+using System.Net.Http.Json;
 
 namespace Todo.Integration
 {
     public class Program
     {
-        static void Main(string[] args)
+        public static readonly HttpClient client = new HttpClient();
+
+        private static async Task Main(string[] args)
         {
-            var clientResponse = callRESTAPI();
+            client.BaseAddress = new Uri("http://localhost:5052/");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
 
-            if (clientResponse.Result == null)
+            try
             {
-                Console.WriteLine("Please check the Url Parameters");
+                // Create a new product
+                TodoModel model = new TodoModel
+                {
+                    Id = 0,
+                    Name = "zxc",
+                    Description = "qwe"
+                };
+
+                // Get the product
+                List<TodoModel> todos = await Create(model);
+
+                await Console.Out.WriteLineAsync("РЕГАЕМСЯ");
+                await Console.Out.WriteLineAsync(string.Join(" ", todos));
+
+                todos = await Get();
+                await Console.Out.WriteLineAsync("ЛОГИНИМСЯ");
+                await Console.Out.WriteLineAsync(string.Join(" ", todos));
+
+
+
             }
-            
-        else
+            catch (Exception e)
             {
-                clientResponse.Result.ToList().ForEach(x => Console.WriteLine(x.Name + " ")) ;
+                Console.WriteLine(e.Message);
             }
 
-
+            Console.ReadLine();
         }
-        public static async Task<IEnumerable<TodoModel>> callRESTAPI()
+
+
+        static async Task<TodoModel> GetUserAsync(string path)
         {
-
-            var httpClient = new HttpClient();
-            var baseUrl = "http://localhost:5052/api/TodoModels";
-            httpClient.BaseAddress = new Uri(baseUrl);
-
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            TodoModel model = null;
 
 
-            var response = httpClient.GetAsync(baseUrl).Result;
-
+            HttpResponseMessage response = await client.GetAsync(path);
             if (response.IsSuccessStatusCode)
             {
-                dynamic dataresponseobject = response.Content.ReadAsStringAsync().Result;
-
-                foreach (var item in dataresponseobject)
-                {
-                    Console.WriteLine($"{item.Company}");
-                }
+                model = DataSerializer.Deserialize<TodoModel>(await response.Content.ReadAsStringAsync())!;
             }
-            return DataSerializer.Deserialize<IEnumerable<TodoModel>>(response.Content.ReadAsStringAsync().Result)!;
+            return model;
+        }
+
+        static async Task<List<TodoModel>> Create(TodoModel model)
+        {
+            HttpResponseMessage response = await client.PostAsJsonAsync(
+                "api/TodoModels", model);
+            response.EnsureSuccessStatusCode();
+
+            List<TodoModel> userResponse = new();
+            if (response.IsSuccessStatusCode)
+            {
+                userResponse = DataSerializer.Deserialize<List<TodoModel>>(await response.Content.ReadAsStringAsync())!;
+            }
+            return userResponse;
+        }
+
+        static async Task<List<TodoModel>> Get()
+        {
+
+            HttpResponseMessage response = await client.GetAsync(
+                "api/TodoModels");
+            response.EnsureSuccessStatusCode();
+
+            List<TodoModel> userResponse = new();
+            if (response.IsSuccessStatusCode)
+            {
+                userResponse = DataSerializer.Deserialize<List<TodoModel>>(await response.Content.ReadAsStringAsync())!;
+            }
+            return userResponse;
         }
     }
 }
